@@ -1,3 +1,4 @@
+using apiToDo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,9 @@ namespace apiToDo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Registrar o serviço no contêiner de dependências
+            services.AddScoped<ITarefaService, TarefaService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

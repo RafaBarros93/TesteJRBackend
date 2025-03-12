@@ -1,6 +1,5 @@
 ﻿using apiToDo.DTO;
 using apiToDo.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,6 @@ namespace apiToDo.Controllers
         /// <summary>
         /// Lista todas as tarefas
         /// </summary>
-        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<TarefaDTO>> GetTarefas()
         {
@@ -74,6 +72,41 @@ namespace apiToDo.Controllers
             {
                 return BadRequest(new { msg = $"Erro ao deletar tarefa: {ex.Message}" });
             }
+        }
+
+        // Método para obter tarefa por ID
+        [HttpGet("ObterTarefa/{id}")]
+        public ActionResult<TarefaDTO> ObterTarefa(int id)
+        {
+            var tarefa = _tarefaService.ObterTarefa(id);
+            if (tarefa == null)
+            {
+                return NotFound(new { msg = "Tarefa não encontrada." });
+            }
+
+            return Ok(tarefa);
+        }
+
+        // Método para atualizar tarefa
+        [HttpPut("AtualizarTarefa/{id}")]
+        public ActionResult<List<TarefaDTO>> AtualizarTarefa(int id, [FromBody] TarefaDTO tarefaAtualizada)
+        {
+            if (tarefaAtualizada == null)
+            {
+                return BadRequest(new { msg = "Tarefa não fornecida corretamente." });
+            }
+
+            var tarefaExistente = _tarefaService.ObterTarefa(id);
+            if (tarefaExistente == null)
+            {
+                return NotFound(new { msg = "Tarefa não encontrada." });
+            }
+
+            _tarefaService.AtualizarTarefa(id, tarefaAtualizada);
+
+            var tarefasAtualizadas = _tarefaService.ListarTarefas();
+
+            return Ok(tarefasAtualizadas);
         }
     }
 }

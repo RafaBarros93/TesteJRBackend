@@ -8,5 +8,7 @@ namespace apiToDo.Services
         IEnumerable<TarefaDTO> ListarTarefas();
         void InserirTarefa(TarefaDTO tarefa);
         bool DeletarTarefa(int id);
+        void AtualizarTarefa(int id, TarefaDTO tarefa);
+        TarefaDTO ObterTarefa(int id);
     }
 }
