@@ -1,4 +1,4 @@
-# Visual Studio e arquivos temporários
+# Visual Studio e arquivos temporï¿½rios
 .vs/
 *.user
 *.suo
@@ -22,10 +22,11 @@ out/
 *.err
 *.orig
 
-# Configurações do Visual Studio Code
+# Configuraï¿½ï¿½es do Visual Studio Code
 .vscode/
+.vs\apiToDo\v17
 
-# Configurações do Rider (JetBrains)
+# Configuraï¿½ï¿½es do Rider (JetBrains)
 .idea/
 
 # Arquivos de pacotes NuGet
@@ -33,7 +34,7 @@ out/
 packages/
 project.lock.json
 
-# Diretórios temporários do sistema
+# Diretï¿½rios temporï¿½rios do sistema
 Thumbs.db
 ehthumbs.db
 Desktop.ini
@@ -44,3 +45,8 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.vs/apiToDo/v17/.suo
+.vs/apiToDo/v17/.suo
+apiToDo/obj/Debug/net5.0/apiToDo.AssemblyInfo.cs
+apiToDo/obj/Debug/net5.0/apiToDo.AssemblyInfoInputs.cache
+apiToDo/obj/Debug/net5.0/apiToDo.assets.cache
