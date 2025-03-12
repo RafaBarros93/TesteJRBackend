@@ -6,7 +6,7 @@ namespace apiToDo.Services
 {
     public class TarefaService : ITarefaService
     {
-        
+
 
         // Lista em memória para armazenar as tarefas
         private static List<TarefaDTO> _listaTarefas = new List<TarefaDTO>
@@ -23,7 +23,7 @@ namespace apiToDo.Services
 
         public void InserirTarefa(TarefaDTO tarefa)
         {
-           /// Incrementa o ID_TAREFA e adiciona a tarefa na lista
+            /// Incrementa o ID_TAREFA e adiciona a tarefa na lista
             tarefa.ID_TAREFA = _listaTarefas.Count + 1; // Garantir que o ID seja único e incremental
             _listaTarefas.Add(tarefa);
         }
@@ -38,13 +38,14 @@ namespace apiToDo.Services
         }
 
         // Novo método para atualizar a tarefa
-        public void AtualizarTarefa(int id, TarefaDTO tarefaAtualizada)
+        public bool AtualizarTarefa(int id, TarefaDTO tarefaAtualizada)
         {
             var tarefaExistente = _listaTarefas.FirstOrDefault(t => t.ID_TAREFA == id);
-            if (tarefaExistente != null)
-            {
-                tarefaExistente.DS_TAREFA = tarefaAtualizada.DS_TAREFA;
-            }
+            if (tarefaExistente == null)
+                return false;
+
+            tarefaExistente.DS_TAREFA = tarefaAtualizada.DS_TAREFA;
+            return true;
         }
 
         // Novo método para obter uma tarefa

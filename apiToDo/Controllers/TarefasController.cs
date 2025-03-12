@@ -23,15 +23,7 @@ namespace apiToDo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<TarefaDTO>> GetTarefas()
         {
-            try
-            {
-                var tarefas = _tarefaService.ListarTarefas();
-                return Ok(tarefas);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { msg = $"Erro ao listar tarefas: {ex.Message}" });
-            }
+            return Ok(_tarefaService.ListarTarefas());
         }
 
         /// <summary>
@@ -40,18 +32,13 @@ namespace apiToDo.Controllers
         [HttpPost]
         public ActionResult InserirTarefa([FromBody] TarefaDTO request)
         {
-            try
-            {
-                if (request == null)
-                    return BadRequest(new { msg = "Dados inválidos" });
 
-                _tarefaService.InserirTarefa(request);
-                return CreatedAtAction(nameof(GetTarefas), new { msg = "Tarefa criada com sucesso" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { msg = $"Erro ao inserir tarefa: {ex.Message}" });
-            }
+            if (string.IsNullOrWhiteSpace(request.DS_TAREFA))
+                throw new ArgumentException("A descrição da tarefa é obrigatória.");
+
+            _tarefaService.InserirTarefa(request);
+            return CreatedAtAction(nameof(GetTarefas), new { msg = "Tarefa criada com sucesso" });
+
         }
 
         /// <summary>
@@ -60,18 +47,10 @@ namespace apiToDo.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeletarTarefa(int id)
         {
-            try
-            {
-                var sucesso = _tarefaService.DeletarTarefa(id);
-                if (!sucesso)
-                    return NotFound(new { msg = "Tarefa não encontrada" });
-
-                return NoContent(); // 204 - Sem conteúdo
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { msg = $"Erro ao deletar tarefa: {ex.Message}" });
-            }
+            var removido = _tarefaService.DeletarTarefa(id);
+            if (!removido)
+                throw new KeyNotFoundException("Tarefa não encontrada.");
+            return NoContent();
         }
 
         // Método para obter tarefa por ID
@@ -79,34 +58,22 @@ namespace apiToDo.Controllers
         public ActionResult<TarefaDTO> ObterTarefa(int id)
         {
             var tarefa = _tarefaService.ObterTarefa(id);
-            if (tarefa == null)
-            {
-                return NotFound(new { msg = "Tarefa não encontrada." });
-            }
-
-            return Ok(tarefa);
+            return tarefa == null ? throw new KeyNotFoundException("Tarefa não encontrada.") : (ActionResult<TarefaDTO>)Ok(tarefa);
         }
 
         // Método para atualizar tarefa
         [HttpPut("AtualizarTarefa/{id}")]
         public ActionResult<List<TarefaDTO>> AtualizarTarefa(int id, [FromBody] TarefaDTO tarefaAtualizada)
+
         {
-            if (tarefaAtualizada == null)
-            {
-                return BadRequest(new { msg = "Tarefa não fornecida corretamente." });
-            }
+            if (string.IsNullOrWhiteSpace(tarefaAtualizada.DS_TAREFA))
+                throw new ArgumentException("A descrição da tarefa é obrigatória.");
 
-            var tarefaExistente = _tarefaService.ObterTarefa(id);
-            if (tarefaExistente == null)
-            {
-                return NotFound(new { msg = "Tarefa não encontrada." });
-            }
+            var atualizado = _tarefaService.AtualizarTarefa(id, tarefaAtualizada);
+            if (!atualizado)
+                throw new KeyNotFoundException("Tarefa não encontrada.");
 
-            _tarefaService.AtualizarTarefa(id, tarefaAtualizada);
-
-            var tarefasAtualizadas = _tarefaService.ListarTarefas();
-
-            return Ok(tarefasAtualizadas);
+            return NoContent();
         }
     }
 }
