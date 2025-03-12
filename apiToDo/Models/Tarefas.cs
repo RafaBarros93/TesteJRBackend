@@ -1,5 +1,4 @@
 ﻿using apiToDo.DTO;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,64 +6,41 @@ namespace apiToDo.Models
 {
     public class Tarefas
     {
-        public List<TarefaDTO> lstTarefas()
+        private readonly List<TarefaDTO> _listaTarefas;
+
+        public Tarefas()
         {
-            try
+            _listaTarefas = new List<TarefaDTO>
             {
-                List<TarefaDTO> lstTarefas = new List<TarefaDTO>();
+                new() { ID_TAREFA = 1, DS_TAREFA = "Fazer Compras" },
+                new() { ID_TAREFA = 2, DS_TAREFA = "Fazer Atividade da Faculdade" },
+                new() { ID_TAREFA = 3, DS_TAREFA = "Subir Projeto de Teste no GitHub" }
+            };
+        }
 
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 1,
-                    DS_TAREFA = "Fazer Compras"
-                });
+        public List<TarefaDTO> ListaTarefas()
+        {
+            return _listaTarefas;
+        }
 
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 2,
-                    DS_TAREFA = "Fazer Atividad Faculdade"
-                });
-
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 3,
-                    DS_TAREFA = "Subir Projeto de Teste no GitHub"
-                });
-
-                return new List<TarefaDTO>();
-            }
-            catch(Exception ex)
+        public void InserirTarefa(TarefaDTO request)
+        {
+            if (request != null)
             {
-                throw ex;
+                _listaTarefas.Add(request);
             }
         }
 
+        public bool DeletarTarefa(int idTarefa)
+        {
+            var tarefa = _listaTarefas.FirstOrDefault(t => t.ID_TAREFA == idTarefa);
+            if (tarefa == null)
+            {
+                return false;
+            }
 
-        public void InserirTarefa(TarefaDTO Request)
-        {
-            try
-            {
-                List<TarefaDTO> lstResponse = lstTarefas();
-                lstResponse.Add(Request);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public void DeletarTarefa(int ID_TAREFA)
-        {
-            try
-            {
-                List<TarefaDTO> lstResponse = lstTarefas();
-                var Tarefa = lstResponse.FirstOrDefault(x => x.ID_TAREFA == ID_TAREFA);
-                TarefaDTO Tarefa2 = lstResponse.Where(x=> x.ID_TAREFA == Tarefa.ID_TAREFA).FirstOrDefault();
-                lstResponse.Remove(Tarefa2);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+            _listaTarefas.Remove(tarefa);
+            return true;
         }
     }
 }
